@@ -18,8 +18,8 @@ namespace OfficeApp.Models
         [ForeignKey("DeviceId")]
         public Device Device { get; set; }
 
-        public DateTime usedFrom { get; set; }
-        public DateTime usedTo { get; set; }
+        public DateTime UsedFrom { get; set; }
+        public DateTime? UsedTo { get; set; }
 
 
     }

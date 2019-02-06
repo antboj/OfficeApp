@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using OfficeApp.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -25,9 +26,12 @@ namespace OfficeApp.Controllers
         {
             var allOffices = _context.Offices;
 
-            if (allOffices.Any())
+            var foundOffice = allOffices.Select(n => new
+                { Id = n.Id, Name = n.Description, Persons = n.Persons.Select(y => y.FirstName + " " + y.LastName) });
+
+            if (foundOffice.Any())
             {
-                return Ok(allOffices);
+                return Ok(foundOffice.ToList());
             }
 
             return NotFound();
@@ -39,7 +43,8 @@ namespace OfficeApp.Controllers
         {
             var allOffices = _context.Offices;
 
-            var foundOffice = allOffices.Where(x => x.Id == id);
+            var foundOffice = allOffices.Where(x => x.Id == id).Select(n => new
+                {Id = n.Id, Name = n.Description, Persons = n.Persons.Select(y => y.FirstName + " " + y.LastName)});
 
             if (foundOffice != null)
             {

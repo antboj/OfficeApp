@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OfficeApp.Dto;
 using OfficeApp.Models;
 
 namespace OfficeApp.Controllers
@@ -25,9 +26,12 @@ namespace OfficeApp.Controllers
         {
             var allPersons = _context.Persons;
 
-            if (allPersons.Any())
+            var query = allPersons.Select(x => new
+                {Name = x.FirstName + " " + x.LastName, Office = x.Office.Description, Devices = x.Devices.Select(y => y.Name)});
+
+            if (query.Any())
             {
-                return Ok(allPersons);
+                return Ok(query);
             }
 
             return NotFound();
@@ -39,11 +43,12 @@ namespace OfficeApp.Controllers
         {
             var allPersons = _context.Persons;
 
-            var foundOffice = allPersons.Where(x => x.Id == id);
+            var foundPerson = allPersons.Where(x => x.Id == id).Select(x => new
+                { Name = x.FirstName + " " + x.LastName, Office = x.Office.Description, Devices = x.Devices.Select(y => y.Name) });
 
-            if (allPersons != null)
+            if (foundPerson != null)
             {
-                return Ok(allPersons);
+                return Ok(foundPerson);
             }
 
             return NotFound();
@@ -51,12 +56,36 @@ namespace OfficeApp.Controllers
 
         // POST api/values
         [HttpPost]
-        public IActionResult Post(Person input)
+        public IActionResult Post(PersonDto input)
         {
             if (input != null)
             {
-                _context.Persons.Add(input);
+                var person = new Person
+                {
+                    FirstName = input.FirstName,
+                    LastName = input.LastName,
+                    OfficeId = input.OfficeId,
+                    //Office = new Office
+                    //{
+                    //    //Description = input.Office.Description,
+                    //    Persons = new List<Person>()
+                    //}
+                };
+                _context.Persons.Add(person);
                 _context.SaveChanges();
+                //person.Office.Persons.Add(person);
+                //_context.SaveChanges();
+
+                var lastPerson = _context.Persons.Last();
+                var LastPersonOffice = lastPerson.OfficeId;
+                
+                var officeName = _context.Offices.Where(o => o.Id == LastPersonOffice).FirstOrDefault();
+
+                var lista = officeName.Persons;
+                lista.Add(person);
+
+
+
                 return Ok();
             }
 
@@ -65,23 +94,23 @@ namespace OfficeApp.Controllers
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, Person input)
+        public IActionResult Put(int id, PersonDto input)
         {
             var all = _context.Persons.Include(o => o.Office);
-            var officeKey = all.Select(x => x.OfficeId).ToList();
+            var officeKey = all.Where(x => x.Id == id).Select(c => c.OfficeId).FirstOrDefault();
             var foundPerson = _context.Persons.Find(id);
 
             if (foundPerson != null)
             {
                 foundPerson.FirstName = input.FirstName;
                 foundPerson.LastName = input.LastName;
-                if (foundPerson.OfficeId != 0)
+                if (input.OfficeId != 0)
                 {
                     foundPerson.OfficeId = input.OfficeId;
                 }
                 else
                 {
-                    foundPerson.OfficeId = officeKey[0];
+                    foundPerson.OfficeId = officeKey;
                 }
                 _context.SaveChanges();
                 return Ok();

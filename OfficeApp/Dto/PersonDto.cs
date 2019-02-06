@@ -1,22 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using OfficeApp.Models;
 
-namespace OfficeApp.Models
+namespace OfficeApp.Dto
 {
-    public class Person
+    public class PersonDto
     {
-        public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-
         public int OfficeId { get; set; }
-        [ForeignKey("OfficeId")]
         public Office Office { get; set; }
-
-        public IList<Device> Devices { get; set; }
     }
 }
