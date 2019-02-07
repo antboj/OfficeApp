@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>OfficeApp</name>
+    </assembly>
+    <members>
+        <member name="M:OfficeApp.Controllers.DeviceController.Get">
+            <summary>
+            Return all devices
+            </summary>
+        </member>
+        <member name="M:OfficeApp.Controllers.DeviceController.Get(System.Int32)">
+            <summary>
+            Return device by ID
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="M:OfficeApp.Controllers.DeviceController.Post(OfficeApp.Dto.DeviceDto)">
+            <summary>
+            Insert new device
+            </summary>
+            <param name="input"></param>
+        </member>
+        <member name="M:OfficeApp.Controllers.DeviceController.UseDevice(System.Int32,System.Int32)">
+            <summary>
+            Use new device by person
+            </summary>
+            <param name="userId"></param>
+            <param name="deviceId"></param>
+        </member>
+        <member name="M:OfficeApp.Controllers.DeviceController.ChangeDeviceUser(System.Int32,System.Int32)">
+            <summary>
+            Change which person use device
+            </summary>
+            <param name="userId"></param>
+            <param name="deviceId"></param>
+        </member>
+        <member name="M:OfficeApp.Controllers.DeviceController.Put(System.Int32,System.String)">
+            <summary>
+            Update device
+            </summary>
+            <param name="id"></param>
+            <param name="deviceId"></param>
+        </member>
+        <member name="M:OfficeApp.Controllers.DeviceController.Delete(System.Int32)">
+            <summary>
+            Delete device by ID
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="M:OfficeApp.Controllers.OfficeController.Get">
+            <summary>
+            Return all offices
+            </summary>
+        </member>
+        <member name="M:OfficeApp.Controllers.OfficeController.Get(System.Int32)">
+            <summary>
+            Return office by ID
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="M:OfficeApp.Controllers.OfficeController.Post(OfficeApp.Models.Office)">
+            <summary>
+            Insert new office
+            </summary>
+            <param name="input"></param>
+        </member>
+        <member name="M:OfficeApp.Controllers.OfficeController.Put(System.Int32,OfficeApp.Models.Office)">
+            <summary>
+            Update office
+            </summary>
+            <param name="id"></param>
+            <param name="input"></param>
+        </member>
+        <member name="M:OfficeApp.Controllers.OfficeController.Delete(System.Int32)">
+            <summary>
+            Delete office by ID
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="M:OfficeApp.Controllers.PersonController.Get">
+            <summary>
+            Get all persons
+            </summary>
+        </member>
+        <member name="M:OfficeApp.Controllers.PersonController.Get(System.Int32)">
+            <summary>
+            Return person by ID
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="M:OfficeApp.Controllers.PersonController.Post(OfficeApp.Dto.PersonDto)">
+            <summary>
+            Insert new person
+            </summary>
+            <param name="input"></param>
+        </member>
+        <member name="M:OfficeApp.Controllers.PersonController.Put(System.Int32,OfficeApp.Dto.PersonDto)">
+            <summary>
+            Update person by Id
+            </summary>
+            <param name="id"></param>
+            <param name="input"></param>
+        </member>
+        <member name="M:OfficeApp.Controllers.PersonController.Delete(System.Int32)">
+            <summary>
+            Delete person by Id
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="M:OfficeApp.Controllers.PersonController.GetByOffice(System.String)">
+            <summary>
+            Get all persons from same office
+            </summary>
+            <param name="officeName"></param>
+        </member>
+        <member name="M:OfficeApp.Controllers.UsageController.Get">
+            <summary>
+            Return all usages
+            </summary>
+        </member>
+        <member name="M:OfficeApp.Controllers.UsageController.Get(System.Int32)">
+            <summary>
+            Return usage by person
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="M:OfficeApp.Controllers.UsageController.AllByDevice(System.Int32)">
+            <summary>
+            Return usage by device
+            </summary>
+            <param name="deviceId"></param>
+        </member>
+        <member name="M:OfficeApp.Controllers.UsageController.AllByPerson(System.Int32)">
+            <summary>
+            Return all usages by person
+            </summary>
+            <param name="personId"></param>
+        </member>
+    </members>
+</doc>

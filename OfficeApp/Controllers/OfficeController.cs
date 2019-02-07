@@ -20,7 +20,10 @@ namespace OfficeApp.Controllers
             _context = context;
         }
 
-        // GET: api/<controller>
+        // GET api/values/5
+        /// <summary>
+        /// Return all offices
+        /// </summary>
         [HttpGet]
         public IActionResult Get()
         {
@@ -37,7 +40,11 @@ namespace OfficeApp.Controllers
             return NotFound();
         }
 
-        // GET api/<controller>/5
+        // GET api/values/5
+        /// <summary>
+        /// Return office by ID
+        /// </summary>
+        /// <param name="id"></param>
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
@@ -55,6 +62,10 @@ namespace OfficeApp.Controllers
         }
 
         // POST api/<controller>
+        /// <summary>
+        /// Insert new office
+        /// </summary>
+        /// <param name="input"></param>
         [HttpPost]
         public IActionResult Post(Office input)
         {
@@ -69,6 +80,11 @@ namespace OfficeApp.Controllers
         }
 
         // PUT api/<controller>/5
+        /// <summary>
+        /// Update office
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="input"></param>
         [HttpPut("{id}")]
         public IActionResult Put(int id, Office input)
         {
@@ -85,6 +101,10 @@ namespace OfficeApp.Controllers
         }
 
         // DELETE api/<controller>/5
+        /// <summary>
+        /// Delete office by ID
+        /// </summary>
+        /// <param name="id"></param>
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

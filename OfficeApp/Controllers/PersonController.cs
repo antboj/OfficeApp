@@ -19,8 +19,10 @@ namespace OfficeApp.Controllers
         {
             _context = context;
         }
-
         // GET api/values
+        /// <summary>
+        /// Get all persons
+        /// </summary>
         [HttpGet]
         public IActionResult Get()
         {
@@ -38,6 +40,10 @@ namespace OfficeApp.Controllers
         }
 
         // GET api/values/5
+        /// <summary>
+        /// Return person by ID
+        /// </summary>
+        /// <param name="id"></param>
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
@@ -55,6 +61,10 @@ namespace OfficeApp.Controllers
         }
 
         // POST api/values
+        /// <summary>
+        /// Insert new person
+        /// </summary>
+        /// <param name="input"></param>
         [HttpPost]
         public IActionResult Post(PersonDto input)
         {
@@ -65,16 +75,9 @@ namespace OfficeApp.Controllers
                     FirstName = input.FirstName,
                     LastName = input.LastName,
                     OfficeId = input.OfficeId,
-                    //Office = new Office
-                    //{
-                    //    //Description = input.Office.Description,
-                    //    Persons = new List<Person>()
-                    //}
                 };
                 _context.Persons.Add(person);
                 _context.SaveChanges();
-                //person.Office.Persons.Add(person);
-                //_context.SaveChanges();
 
                 var lastPerson = _context.Persons.Last();
                 var LastPersonOffice = lastPerson.OfficeId;
@@ -93,6 +96,11 @@ namespace OfficeApp.Controllers
         }
 
         // PUT api/values/5
+        /// <summary>
+        /// Update person by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="input"></param>
         [HttpPut("{id}")]
         public IActionResult Put(int id, PersonDto input)
         {
@@ -120,6 +128,10 @@ namespace OfficeApp.Controllers
         }
 
         // DELETE api/values/5
+        /// <summary>
+        /// Delete person by Id
+        /// </summary>
+        /// <param name="id"></param>
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
@@ -134,6 +146,28 @@ namespace OfficeApp.Controllers
 
             return NotFound();
         }
+
+        // GET api/values/5
+        /// <summary>
+        /// Get all persons from same office
+        /// </summary>
+        /// <param name="officeName"></param>
+        [HttpGet("GetByOffice{officeName}")]
+        public IActionResult GetByOffice(string officeName)
+        {
+            var allPersons = _context.Persons;
+
+            var query = allPersons.Where(o => o.Office.Description == officeName).GroupBy(x => x.Office.Description)
+                .Select(y => new {Office = y.Key, Persons = y.Select(p => p.FirstName + " " + p.LastName)});
+
+            if (query != null)
+            {
+                return Ok(query);
+            }
+
+            return NotFound();
+        }
+
     }
 
 }
