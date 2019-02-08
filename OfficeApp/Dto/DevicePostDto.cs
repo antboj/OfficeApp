@@ -6,12 +6,9 @@ using OfficeApp.Models;
 
 namespace OfficeApp.Dto
 {
-    public class DeviceDto
+    public class DevicePostDto
     {
-        //public int Id { get; set; }
-        
         public string Name { get; set; }
         public int? PersonId { get; set; }
-        public Person Person { get; set; }
     }
 }

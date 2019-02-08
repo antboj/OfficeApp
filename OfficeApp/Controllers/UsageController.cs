@@ -24,6 +24,8 @@ namespace OfficeApp.Controllers
         /// Return all usages
         /// </summary>
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public IActionResult Get()
         {
             var allUsages = _context.Usages;
@@ -50,6 +52,8 @@ namespace OfficeApp.Controllers
         /// </summary>
         /// <param name="id"></param>
         [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public IActionResult Get(int id)
         {
             var allUsages = _context.Usages;
@@ -76,6 +80,8 @@ namespace OfficeApp.Controllers
         /// </summary>
         /// <param name="deviceId"></param>
         [HttpGet("AllByDevice/{deviceId}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public IActionResult AllByDevice(int deviceId)
         {
             var allUsages = _context.Usages;
@@ -100,6 +106,8 @@ namespace OfficeApp.Controllers
         /// </summary>
         /// <param name="personId"></param>
         [HttpGet("AllByPerson/{personId}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public IActionResult AllByPerson(int personId)
         {
             var allUsages = _context.Usages;
@@ -115,24 +123,35 @@ namespace OfficeApp.Controllers
             return NotFound();
         }
 
-
-
-        // POST api/<controller>
-        [HttpPost]
-        public void Post([FromBody]string value)
+        // GET api/values/5
+        /// <summary>
+        /// Return all usages by person
+        /// </summary>
+        /// <param name="personId"></param>
+        [HttpGet("TimeUsedByPerson/{personId}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public IActionResult TimeUsedByPerson(int personId)
         {
-        }
+            var allUsages = _context.Usages;
 
-        // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
+            //var query = allUsages.Where(p => p.PersonId == personId && p.UsedTo != null).GroupBy(x => x.Device.Name)
+            //    .Select(y => new { Device = y.Key, TimeUsed = y.Select(o => new { Minutes = (o.UsedTo - o.UsedFrom).Value.Minutes}) });
 
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            var query = allUsages.Where(p => p.PersonId == personId && p.UsedTo != null).GroupBy(x => x.Device.Name)
+                .Select(y => new
+                {
+                    Device = y.Key,
+                    TimeUsed =
+                        new TimeSpan(y.Sum(u => u.UsedTo.Value.Ticks - u.UsedFrom.Ticks)).ToString(@"dd\.hh\:mm\:ss")
+                });
+
+            if (query.Any())
+            {
+                return Ok(query.ToList());
+            }
+
+            return NotFound();
         }
     }
 }

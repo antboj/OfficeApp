@@ -15,7 +15,7 @@
             </summary>
             <param name="id"></param>
         </member>
-        <member name="M:OfficeApp.Controllers.DeviceController.Post(OfficeApp.Dto.DeviceDto)">
+        <member name="M:OfficeApp.Controllers.DeviceController.Post(OfficeApp.Dto.DevicePostDto)">
             <summary>
             Insert new device
             </summary>
@@ -25,14 +25,14 @@
             <summary>
             Use new device by person
             </summary>
-            <param name="userId"></param>
+            <param name="personId"></param>
             <param name="deviceId"></param>
         </member>
         <member name="M:OfficeApp.Controllers.DeviceController.ChangeDeviceUser(System.Int32,System.Int32)">
             <summary>
             Change which person use device
             </summary>
-            <param name="userId"></param>
+            <param name="personId"></param>
             <param name="deviceId"></param>
         </member>
         <member name="M:OfficeApp.Controllers.DeviceController.Put(System.Int32,System.String)">
@@ -40,7 +40,7 @@
             Update device
             </summary>
             <param name="id"></param>
-            <param name="deviceId"></param>
+            <param name="deviceName"></param>
         </member>
         <member name="M:OfficeApp.Controllers.DeviceController.Delete(System.Int32)">
             <summary>
@@ -65,7 +65,7 @@
             </summary>
             <param name="input"></param>
         </member>
-        <member name="M:OfficeApp.Controllers.OfficeController.Put(System.Int32,OfficeApp.Models.Office)">
+        <member name="M:OfficeApp.Controllers.OfficeController.Put(System.Int32,OfficeApp.Dto.OfficeDto)">
             <summary>
             Update office
             </summary>
@@ -89,13 +89,13 @@
             </summary>
             <param name="id"></param>
         </member>
-        <member name="M:OfficeApp.Controllers.PersonController.Post(OfficeApp.Dto.PersonDto)">
+        <member name="M:OfficeApp.Controllers.PersonController.Post(OfficeApp.Dto.PersonPostDto)">
             <summary>
             Insert new person
             </summary>
             <param name="input"></param>
         </member>
-        <member name="M:OfficeApp.Controllers.PersonController.Put(System.Int32,OfficeApp.Dto.PersonDto)">
+        <member name="M:OfficeApp.Controllers.PersonController.Put(System.Int32,OfficeApp.Dto.PersonUpdateDto)">
             <summary>
             Update person by Id
             </summary>
@@ -132,6 +132,12 @@
             <param name="deviceId"></param>
         </member>
         <member name="M:OfficeApp.Controllers.UsageController.AllByPerson(System.Int32)">
+            <summary>
+            Return all usages by person
+            </summary>
+            <param name="personId"></param>
+        </member>
+        <member name="M:OfficeApp.Controllers.UsageController.TimeUsedByPerson(System.Int32)">
             <summary>
             Return all usages by person
             </summary>

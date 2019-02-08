@@ -27,13 +27,15 @@ namespace OfficeApp.Controllers
         /// Return all devices
         /// </summary>
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public IActionResult Get()
         {
             var allDevices = _context.Devices;
 
             var query = allDevices.Select(x => new
             {
-                Id = x.Id, Name = x.Name, Person = x.Person.FirstName + " " + x.Person.LastName
+                Name = x.Name, Using = x.Person.FirstName + " " + x.Person.LastName
             });
 
             if (query.Any())
@@ -50,15 +52,16 @@ namespace OfficeApp.Controllers
         /// </summary>
         /// <param name="id"></param>
         [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public IActionResult Get(int id)
         {
             var allDevices = _context.Devices;
 
             var foundDevice = allDevices.Where(x => x.Id == id).Select(x => new
             {
-                Id = x.Id,
                 Name = x.Name,
-                Person = x.Person.FirstName + " " + x.Person.LastName
+                Using = x.Person.FirstName + " " + x.Person.LastName
             });
 
             if (foundDevice != null)
@@ -75,52 +78,83 @@ namespace OfficeApp.Controllers
         /// </summary>
         /// <param name="input"></param>
         [HttpPost]
-        public IActionResult Post([FromBody]DeviceDto input)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult Post(DevicePostDto input)
         {
-            if (input != null)
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                var device = new Device
+                try
                 {
-                    Name = input.Name,
-                };
-                _context.Devices.Add(device);
-                _context.SaveChanges();
-                return Ok();
+                    if (input != null)
+                    {
+                        var device = new Device
+                        {
+                            Name = input.Name,
+                        };
+                        _context.Devices.Add(device);
+                        _context.SaveChanges();
+                        transaction.Commit();
+
+                        return Ok();
+                    }
+                }
+                catch (Exception e)
+                {
+                    return BadRequest();
+                }
             }
 
-            return NotFound();
+            return BadRequest();
         }
 
         // PUT api/<controller>/5
         /// <summary>
         /// Use new device by person
         /// </summary>
-        /// <param name="userId"></param>
+        /// <param name="personId"></param>
         /// <param name="deviceId"></param>
-        [HttpPut("UseDevice/{userId}/{deviceId}")]
-        public IActionResult UseDevice(int userId, int deviceId)
+        [HttpPut("UseDevice/{personId}/{deviceId}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public IActionResult UseDevice(int personId, int deviceId)
         {
-            var foundDevice = _context.Devices.Find(deviceId);
-
-            var isCurrentlyUsed = _context.Usages
-                .Where(x => x.DeviceId == deviceId && x.UsedTo == null).Any();
-
-            if (foundDevice != null && !isCurrentlyUsed)
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                foundDevice.PersonId = userId;
-                _context.SaveChanges();
-
-                var newUsageRecord = new Usage
+                try
                 {
-                    PersonId = userId,
-                    DeviceId = deviceId,
-                    UsedFrom = DateTime.Now
-                };
+                    var foundDevice = _context.Devices.Find(deviceId);
 
-                _context.Usages.Add(newUsageRecord);
-                _context.SaveChanges();
+                    // Check if device is currently used by any person
+                    var isCurrentlyUsed = _context.Usages
+                        .Where(x => x.DeviceId == deviceId && x.UsedTo == null).Any();
 
-                return Ok();
+                    if (foundDevice != null && !isCurrentlyUsed)
+                    {
+                        // Assign user to device
+                        foundDevice.PersonId = personId;
+                        _context.SaveChanges();
+
+                        // Make new record of using device
+                        var newUsageRecord = new Usage
+                        {
+                            PersonId = personId,
+                            DeviceId = deviceId,
+                            UsedFrom = DateTime.Now
+                        };
+
+                        _context.Usages.Add(newUsageRecord);
+                        _context.SaveChanges();
+                        transaction.Commit();
+
+                        return Ok();
+                    }
+                }
+                catch (Exception e)
+                {
+                    return BadRequest();
+                }
             }
 
             return NotFound();
@@ -130,35 +164,53 @@ namespace OfficeApp.Controllers
         /// <summary>
         /// Change which person use device
         /// </summary>
-        /// <param name="userId"></param>
+        /// <param name="personId"></param>
         /// <param name="deviceId"></param>
-        [HttpPut("ChangeDeviceUser/{userId}/{deviceId}")]
-        public IActionResult ChangeDeviceUser(int deviceId, int userId)
+        [HttpPut("ChangeDeviceUser/{personId}/{deviceId}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public IActionResult ChangeDeviceUser(int personId, int deviceId)
         {
-            var foundDevice = _context.Devices.Find(deviceId);
-
-            if (foundDevice != null)
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                foundDevice.PersonId = userId;
-                _context.SaveChanges();
-
-                var usageRecord = _context.Usages.Where(u => u.DeviceId == deviceId && u.UsedTo == null).FirstOrDefault();
-
-                usageRecord.UsedTo = DateTime.Now;
-
-                _context.SaveChanges();
-
-                var newUsageRecord = new Usage
+                try
                 {
-                    PersonId = userId,
-                    DeviceId = deviceId,
-                    UsedFrom = DateTime.Now
-                };
+                    var foundDevice = _context.Devices.Find(deviceId);
 
-                _context.Usages.Add(newUsageRecord);
-                _context.SaveChanges();
+                    if (foundDevice != null && foundDevice.PersonId != personId)
+                    {
+                        // Change person using device
+                        foundDevice.PersonId = personId;
+                        _context.SaveChanges();
 
-                return Ok();
+                        // Find who is using device currently
+                        var usageRecord = _context.Usages.Where(u => u.DeviceId == deviceId && u.UsedTo == null).FirstOrDefault();
+                
+                        // Stop using device
+                        usageRecord.UsedTo = DateTime.Now;
+
+                        _context.SaveChanges();
+
+                        // Make new record for new person
+                        var newUsageRecord = new Usage
+                        {
+                            PersonId = personId,
+                            DeviceId = deviceId,
+                            UsedFrom = DateTime.Now
+                        };
+
+                        _context.Usages.Add(newUsageRecord);
+                        _context.SaveChanges();
+                        transaction.Commit();
+
+                        return Ok();
+                    }
+                }
+                catch (Exception e)
+                {
+                    return BadRequest();
+                }
             }
 
             return NotFound();
@@ -169,17 +221,32 @@ namespace OfficeApp.Controllers
         /// Update device
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="deviceId"></param>
+        /// <param name="deviceName"></param>
         [HttpPut("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
         public IActionResult Put(int id, string deviceName)
         {
-            var foundDevice = _context.Devices.Find(id);
-
-            if (foundDevice != null)
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                foundDevice.Name = deviceName;
-                _context.SaveChanges();
-                return Ok();
+                try
+                {
+                    var foundDevice = _context.Devices.Find(id);
+
+                    if (foundDevice != null)
+                    {
+                        foundDevice.Name = deviceName;
+                        _context.SaveChanges();
+                        transaction.Commit();
+
+                        return Ok();
+                    }
+                }
+                catch (Exception e)
+                {
+                    return BadRequest();
+                }
             }
 
             return NotFound();
@@ -191,15 +258,25 @@ namespace OfficeApp.Controllers
         /// </summary>
         /// <param name="id"></param>
         [HttpDelete("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult Delete(int id)
         {
             var device = _context.Devices.Find(id);
 
             if (device != null)
             {
-                _context.Devices.Remove(device);
-                _context.SaveChanges();
-                return Ok(device);
+                try
+                {
+                    _context.Devices.Remove(device);
+                    _context.SaveChanges();
+                    return Ok(device);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest();
+                }
             }
 
             return NotFound();

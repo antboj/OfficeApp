@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace OfficeApp.Migrations
 {
-    public partial class prva : Migration
+    public partial class prvaPosleBrisanja : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -39,7 +39,7 @@ namespace OfficeApp.Migrations
                         column: x => x.OfficeId,
                         principalTable: "Offices",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -49,7 +49,7 @@ namespace OfficeApp.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
-                    PersonId = table.Column<int>(nullable: false)
+                    PersonId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -59,7 +59,7 @@ namespace OfficeApp.Migrations
                         column: x => x.PersonId,
                         principalTable: "Persons",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -70,8 +70,8 @@ namespace OfficeApp.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     PersonId = table.Column<int>(nullable: false),
                     DeviceId = table.Column<int>(nullable: false),
-                    usedFrom = table.Column<DateTime>(nullable: false),
-                    usedTo = table.Column<DateTime>(nullable: false)
+                    UsedFrom = table.Column<DateTime>(nullable: false),
+                    UsedTo = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {

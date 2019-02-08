@@ -6,11 +6,10 @@ using OfficeApp.Models;
 
 namespace OfficeApp.Dto
 {
-    public class PersonDto
+    public class PersonPostDto
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int OfficeId { get; set; }
-        public Office Office { get; set; }
     }
 }

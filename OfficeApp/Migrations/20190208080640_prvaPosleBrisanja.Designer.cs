@@ -10,8 +10,8 @@ using OfficeApp.Models;
 namespace OfficeApp.Migrations
 {
     [DbContext(typeof(OfficeContext))]
-    [Migration("20190205132810_prva")]
-    partial class prva
+    [Migration("20190208080640_prvaPosleBrisanja")]
+    partial class prvaPosleBrisanja
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -29,7 +29,7 @@ namespace OfficeApp.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<int>("PersonId");
+                    b.Property<int?>("PersonId");
 
                     b.HasKey("Id");
 
@@ -80,9 +80,9 @@ namespace OfficeApp.Migrations
 
                     b.Property<int>("PersonId");
 
-                    b.Property<DateTime>("usedFrom");
+                    b.Property<DateTime>("UsedFrom");
 
-                    b.Property<DateTime>("usedTo");
+                    b.Property<DateTime?>("UsedTo");
 
                     b.HasKey("Id");
 
@@ -96,9 +96,8 @@ namespace OfficeApp.Migrations
             modelBuilder.Entity("OfficeApp.Models.Device", b =>
                 {
                     b.HasOne("OfficeApp.Models.Person", "Person")
-                        .WithMany()
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany("Devices")
+                        .HasForeignKey("PersonId");
                 });
 
             modelBuilder.Entity("OfficeApp.Models.Person", b =>
@@ -114,12 +113,12 @@ namespace OfficeApp.Migrations
                     b.HasOne("OfficeApp.Models.Device", "Device")
                         .WithMany()
                         .HasForeignKey("DeviceId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("OfficeApp.Models.Person", "Person")
-                        .WithMany("Devices")
+                        .WithMany()
                         .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618
         }

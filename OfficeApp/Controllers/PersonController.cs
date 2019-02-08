@@ -24,6 +24,8 @@ namespace OfficeApp.Controllers
         /// Get all persons
         /// </summary>
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public IActionResult Get()
         {
             var allPersons = _context.Persons;
@@ -45,6 +47,8 @@ namespace OfficeApp.Controllers
         /// </summary>
         /// <param name="id"></param>
         [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public IActionResult Get(int id)
         {
             var allPersons = _context.Persons;
@@ -66,30 +70,45 @@ namespace OfficeApp.Controllers
         /// </summary>
         /// <param name="input"></param>
         [HttpPost]
-        public IActionResult Post(PersonDto input)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult Post(PersonPostDto input)
         {
-            if (input != null)
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                var person = new Person
+                try
                 {
-                    FirstName = input.FirstName,
-                    LastName = input.LastName,
-                    OfficeId = input.OfficeId,
-                };
-                _context.Persons.Add(person);
-                _context.SaveChanges();
+                    if (input != null)
+                    {
+                        // Add new person
+                        var person = new Person
+                        {
+                            FirstName = input.FirstName,
+                            LastName = input.LastName,
+                            OfficeId = input.OfficeId,
+                        };
+                        _context.Persons.Add(person);
+                        _context.SaveChanges();
 
-                var lastPerson = _context.Persons.Last();
-                var LastPersonOffice = lastPerson.OfficeId;
+                        // Find last added person ofice id
+                        var lastPerson = _context.Persons.Last();
+                        var LastPersonOffice = lastPerson.OfficeId;
                 
-                var officeName = _context.Offices.Where(o => o.Id == LastPersonOffice).FirstOrDefault();
+                        // Find office where is last added person
+                        var officeName = _context.Offices.Where(o => o.Id == LastPersonOffice).FirstOrDefault();
 
-                var lista = officeName.Persons;
-                lista.Add(person);
+                        // Add person into office list
+                        var lista = officeName.Persons;
+                        lista.Add(person);
+                        transaction.Commit();
 
-
-
-                return Ok();
+                        return Ok();
+                    }
+                }
+                catch (Exception e)
+                {
+                    return BadRequest();
+                }
             }
 
             return BadRequest();
@@ -102,26 +121,45 @@ namespace OfficeApp.Controllers
         /// <param name="id"></param>
         /// <param name="input"></param>
         [HttpPut("{id}")]
-        public IActionResult Put(int id, PersonDto input)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public IActionResult Put(int id, PersonUpdateDto input)
         {
-            var all = _context.Persons.Include(o => o.Office);
-            var officeKey = all.Where(x => x.Id == id).Select(c => c.OfficeId).FirstOrDefault();
-            var foundPerson = _context.Persons.Find(id);
-
-            if (foundPerson != null)
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                foundPerson.FirstName = input.FirstName;
-                foundPerson.LastName = input.LastName;
-                if (input.OfficeId != 0)
+                try
                 {
-                    foundPerson.OfficeId = input.OfficeId;
+                    var all = _context.Persons.Include(o => o.Office);
+                    // Find office id for person
+                    var officeKey = all.Where(x => x.Id == id).Select(c => c.OfficeId).FirstOrDefault();
+                    // Find person
+                    var foundPerson = _context.Persons.Find(id);
+
+                    if (foundPerson != null)
+                    {
+                        foundPerson.FirstName = input.FirstName;
+                        foundPerson.LastName = input.LastName;
+                        if (input.OfficeId != 0)
+                        {
+                            // Change office if specified
+                            foundPerson.OfficeId = input.OfficeId;
+                        }
+                        else
+                        {
+                            // Keep the same ofice id if not specified
+                            foundPerson.OfficeId = officeKey;
+                        }
+                        _context.SaveChanges();
+                        transaction.Commit();
+
+                        return Ok();
+                    }
                 }
-                else
+                catch (Exception e)
                 {
-                    foundPerson.OfficeId = officeKey;
+                    return BadRequest();
                 }
-                _context.SaveChanges();
-                return Ok();
             }
 
             return NotFound();
@@ -133,15 +171,25 @@ namespace OfficeApp.Controllers
         /// </summary>
         /// <param name="id"></param>
         [HttpDelete("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult Delete(int id)
         {
             var person = _context.Persons.Find(id);
 
             if (person != null)
             {
-                _context.Persons.Remove(person);
-                _context.SaveChanges();
-                return Ok(person);
+                try
+                {
+                    _context.Persons.Remove(person);
+                    _context.SaveChanges();
+                    return Ok(person);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest();
+                }
             }
 
             return NotFound();
@@ -153,6 +201,8 @@ namespace OfficeApp.Controllers
         /// </summary>
         /// <param name="officeName"></param>
         [HttpGet("GetByOffice{officeName}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public IActionResult GetByOffice(string officeName)
         {
             var allPersons = _context.Persons;
