@@ -28,7 +28,12 @@ namespace OfficeApp.Controllers
         {
             var found = _dbSet.Find(id);
 
-            return Ok(found);
+            if (found != null)
+            {
+                return Ok(found);
+            }
+
+            return NotFound();
         }
 
         // GET api/values/5
@@ -37,38 +42,46 @@ namespace OfficeApp.Controllers
         {
             var all = _dbSet.Select(x => x);
 
-            return Ok(all.ToList());
+            if (all != null)
+            {
+                return Ok(all);
+            }
+
+            return NotFound();
         }
 
         // POST api/<controller>
         [HttpPost]
         public virtual IActionResult Post(T input)
         {
-            _dbSet.Add(input);
-            _context.SaveChanges();
-            return Ok();
-        }
-        /*
-        // PUT api/<controller>/5
-        [HttpPut]
-        public virtual void Put(int id, T input)
-        {
-            
-
-        }
-        */
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public virtual IActionResult Delete(int id)
-        {
-            var found = _dbSet.Find(id);
-
-            if (found != null)
+            using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    _dbSet.Remove(found);
+                    _dbSet.Add(input);
                     _context.SaveChanges();
+                    transaction.Commit();
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    return BadRequest();
+                }
+            }
+        }
+        
+        // PUT api/<controller>/5
+        [HttpPut]
+        public virtual IActionResult Put(int id, T input)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var updated = _context.Attach(input).Entity;
+                    _context.Entry(updated).State = EntityState.Modified;
+                    _context.SaveChanges();
+                    transaction.Commit();
                     return Ok();
                 }
                 catch (Exception e)
@@ -77,7 +90,33 @@ namespace OfficeApp.Controllers
                 }
             }
 
-            return NotFound();
+        }
+        
+        // DELETE api/<controller>/5
+        [HttpDelete("{id}")]
+        public virtual IActionResult Delete(int id)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                var found = _dbSet.Find(id);
+
+                if (found != null)
+                {
+                    try
+                    {
+                        _dbSet.Remove(found);
+                        _context.SaveChanges();
+                        transaction.Commit();
+                        return Ok();
+                    }
+                    catch (Exception e)
+                    {
+                        return BadRequest();
+                    }
+                }
+
+                return NotFound();
+            }
         }
     }
 }

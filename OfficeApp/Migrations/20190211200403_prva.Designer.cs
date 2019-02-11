@@ -10,8 +10,8 @@ using OfficeApp.Models;
 namespace OfficeApp.Migrations
 {
     [DbContext(typeof(OfficeContext))]
-    [Migration("20190211102405_drugaLazyLoading")]
-    partial class drugaLazyLoading
+    [Migration("20190211200403_prva")]
+    partial class prva
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

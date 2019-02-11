@@ -21,8 +21,6 @@ namespace OfficeApp.Controllers
         {
         }
 
-
-
         /*
         // GET api/values/5
         /// <summary>
@@ -48,6 +46,7 @@ namespace OfficeApp.Controllers
             return NotFound();
         }
         */
+
         /*
         // GET api/values/5
         /// <summary>
@@ -75,6 +74,7 @@ namespace OfficeApp.Controllers
             return NotFound();
         }
         */
+
         /*
         // POST api/<controller>
         /// <summary>
@@ -112,6 +112,7 @@ namespace OfficeApp.Controllers
             return BadRequest();
         }
         */
+
         // PUT api/<controller>/5
         /// <summary>
         /// Use new device by person
@@ -219,6 +220,7 @@ namespace OfficeApp.Controllers
 
             return NotFound();
         }
+
         /*
         // PUT api/<controller>/5
         /// <summary>
@@ -256,6 +258,7 @@ namespace OfficeApp.Controllers
             return NotFound();
         }
         */
+
         /*
         // DELETE api/<controller>/5
         /// <summary>

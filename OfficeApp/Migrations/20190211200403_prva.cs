@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace OfficeApp.Migrations
 {
-    public partial class prvaPosleBrisanja : Migration
+    public partial class prva : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
