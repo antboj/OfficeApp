@@ -4,23 +4,6 @@
         <name>OfficeApp</name>
     </assembly>
     <members>
-        <member name="M:OfficeApp.Controllers.DeviceController.Get">
-            <summary>
-            Return all devices
-            </summary>
-        </member>
-        <member name="M:OfficeApp.Controllers.DeviceController.Get(System.Int32)">
-            <summary>
-            Return device by ID
-            </summary>
-            <param name="id"></param>
-        </member>
-        <member name="M:OfficeApp.Controllers.DeviceController.Post(OfficeApp.Dto.DevicePostDto)">
-            <summary>
-            Insert new device
-            </summary>
-            <param name="input"></param>
-        </member>
         <member name="M:OfficeApp.Controllers.DeviceController.UseDevice(System.Int32,System.Int32)">
             <summary>
             Use new device by person
@@ -34,19 +17,6 @@
             </summary>
             <param name="personId"></param>
             <param name="deviceId"></param>
-        </member>
-        <member name="M:OfficeApp.Controllers.DeviceController.Put(System.Int32,System.String)">
-            <summary>
-            Update device
-            </summary>
-            <param name="id"></param>
-            <param name="deviceName"></param>
-        </member>
-        <member name="M:OfficeApp.Controllers.DeviceController.Delete(System.Int32)">
-            <summary>
-            Delete device by ID
-            </summary>
-            <param name="id"></param>
         </member>
         <member name="M:OfficeApp.Controllers.OfficeController.Get">
             <summary>

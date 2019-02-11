@@ -13,15 +13,17 @@ using OfficeApp.Models;
 namespace OfficeApp.Controllers
 {
     [Route("api/Device")]
-    public class DeviceController : Controller
+    public class DeviceController : BaseController<Device>
     {
         private static OfficeContext _context;
 
-        public DeviceController(OfficeContext context)
+        public DeviceController(OfficeContext context) : base(context)
         {
-            _context = context;
         }
 
+
+
+        /*
         // GET api/values/5
         /// <summary>
         /// Return all devices
@@ -45,7 +47,8 @@ namespace OfficeApp.Controllers
 
             return NotFound();
         }
-
+        */
+        /*
         // GET api/values/5
         /// <summary>
         /// Return device by ID
@@ -71,7 +74,8 @@ namespace OfficeApp.Controllers
 
             return NotFound();
         }
-
+        */
+        /*
         // POST api/<controller>
         /// <summary>
         /// Insert new device
@@ -107,7 +111,7 @@ namespace OfficeApp.Controllers
 
             return BadRequest();
         }
-
+        */
         // PUT api/<controller>/5
         /// <summary>
         /// Use new device by person
@@ -215,7 +219,7 @@ namespace OfficeApp.Controllers
 
             return NotFound();
         }
-
+        /*
         // PUT api/<controller>/5
         /// <summary>
         /// Update device
@@ -251,7 +255,8 @@ namespace OfficeApp.Controllers
 
             return NotFound();
         }
-
+        */
+        /*
         // DELETE api/<controller>/5
         /// <summary>
         /// Delete device by ID
@@ -281,5 +286,6 @@ namespace OfficeApp.Controllers
 
             return NotFound();
         }
+        */
     }
 }
