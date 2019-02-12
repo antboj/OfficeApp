@@ -76,7 +76,7 @@
             <summary>
             Return usage by person
             </summary>
-            <param name="id"></param>
+            <param name="personId"></param>
         </member>
         <member name="M:OfficeApp.Controllers.UsageController.AllByDevice(System.Int32)">
             <summary>
