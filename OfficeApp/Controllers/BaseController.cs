@@ -80,7 +80,7 @@ namespace OfficeApp.Controllers
                     transaction.Commit();
                     return Ok();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return BadRequest();
                 }
@@ -109,7 +109,7 @@ namespace OfficeApp.Controllers
                     transaction.Commit();
                     return Ok();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return BadRequest();
                 }
@@ -141,7 +141,7 @@ namespace OfficeApp.Controllers
                         transaction.Commit();
                         return Ok();
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         return BadRequest();
                     }

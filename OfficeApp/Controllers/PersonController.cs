@@ -97,10 +97,10 @@ namespace OfficeApp.Controllers
 
                         // Find last added person ofice id
                         var lastPerson = _context.Persons.Last();
-                        var LastPersonOffice = lastPerson.OfficeId;
+                        var lastPersonOffice = lastPerson.OfficeId;
                 
                         // Find office where is last added person
-                        var officeName = _context.Offices.Where(o => o.Id == LastPersonOffice).FirstOrDefault();
+                        var officeName = _context.Offices.FirstOrDefault(o => o.Id == lastPersonOffice);
 
                         // Add person into office list
                         var lista = officeName.Persons;
@@ -110,7 +110,7 @@ namespace OfficeApp.Controllers
                         return Ok();
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return BadRequest();
                 }
@@ -161,7 +161,7 @@ namespace OfficeApp.Controllers
                         return Ok();
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return BadRequest();
                 }

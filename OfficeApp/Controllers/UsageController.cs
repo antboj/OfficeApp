@@ -50,7 +50,7 @@ namespace OfficeApp.Controllers
         /// <summary>
         /// Return usage by person
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="personId"></param>
         [HttpGet("{personId}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]

@@ -14,8 +14,6 @@ namespace OfficeApp.Controllers
     [Route("api/Office")]
     public class OfficeController : BaseController<Office>
     {
-        private static OfficeContext _context;
-
         public OfficeController(OfficeContext context) : base(context)
         {
         }
