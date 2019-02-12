@@ -15,6 +15,7 @@ namespace OfficeApp.Controllers
     {
         //private static OfficeContext _context;
 
+        /// <inheritdoc />
         public PersonController(OfficeContext context) : base(context)
         {
         }
@@ -70,6 +71,7 @@ namespace OfficeApp.Controllers
 
         
         // POST api/values
+        /// <inheritdoc />
         /// <summary>
         /// Insert new person
         /// </summary>
@@ -103,8 +105,8 @@ namespace OfficeApp.Controllers
                         var officeName = _context.Offices.FirstOrDefault(o => o.Id == lastPersonOffice);
 
                         // Add person into office list
-                        var lista = officeName.Persons;
-                        lista.Add(person);
+                        var personList = officeName.Persons;
+                        personList.Add(person);
                         transaction.Commit();
 
                         return Ok();
@@ -120,6 +122,7 @@ namespace OfficeApp.Controllers
         }
         
         // PUT api/values/5
+        /// <inheritdoc />
         /// <summary>
         /// Update person by Id
         /// </summary>

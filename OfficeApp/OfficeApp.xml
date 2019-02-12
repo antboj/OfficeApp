@@ -55,6 +55,7 @@
             <param name="input"></param>
         </member>
         <member name="M:OfficeApp.Controllers.PersonController.Put(System.Int32,OfficeApp.Models.Person)">
+            <inheritdoc />
             <summary>
             Update person by Id
             </summary>
