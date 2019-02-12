@@ -13,8 +13,6 @@ namespace OfficeApp.Controllers
     [ApiController]
     public class PersonController : BaseController<Person>
     {
-        //private static OfficeContext _context;
-
         /// <inheritdoc />
         public PersonController(OfficeContext context) : base(context)
         {
@@ -68,7 +66,6 @@ namespace OfficeApp.Controllers
             return NotFound();
         }
         */
-
         
         // POST api/values
         /// <inheritdoc />

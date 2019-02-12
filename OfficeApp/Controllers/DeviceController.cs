@@ -15,6 +15,7 @@ namespace OfficeApp.Controllers
     [Route("api/Device")]
     public class DeviceController : BaseController<Device>
     {
+        /// <inheritdoc />
         public DeviceController(OfficeContext context) : base(context)
         {
         }
@@ -44,6 +45,7 @@ namespace OfficeApp.Controllers
             return NotFound();
         }
         */
+
         /*
         // GET api/values/5
         /// <summary>
@@ -71,6 +73,7 @@ namespace OfficeApp.Controllers
             return NotFound();
         }
         */
+
         /*
         // POST api/<controller>
         /// <summary>
@@ -108,6 +111,7 @@ namespace OfficeApp.Controllers
             return BadRequest();
         }
         */
+
         // PUT api/<controller>/5
         /// <summary>
         /// Use new device by person
@@ -218,6 +222,7 @@ namespace OfficeApp.Controllers
 
             return NotFound();
         }
+
         /*
         // PUT api/<controller>/5
         /// <summary>
@@ -255,6 +260,7 @@ namespace OfficeApp.Controllers
             return NotFound();
         }
         */
+
         /*
         // DELETE api/<controller>/5
         /// <summary>
