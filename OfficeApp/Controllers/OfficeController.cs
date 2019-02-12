@@ -12,15 +12,15 @@ using OfficeApp.Models;
 namespace OfficeApp.Controllers
 {
     [Route("api/Office")]
-    public class OfficeController : Controller
+    public class OfficeController : BaseController<Office>
     {
         private static OfficeContext _context;
 
-        public OfficeController(OfficeContext context)
+        public OfficeController(OfficeContext context) : base(context)
         {
-            _context = context;
         }
 
+        /*
         // GET api/values/5
         /// <summary>
         /// Return all offices
@@ -42,7 +42,9 @@ namespace OfficeApp.Controllers
 
             return NotFound();
         }
+        */
 
+        /*
         // GET api/values/5
         /// <summary>
         /// Return office by ID
@@ -65,7 +67,9 @@ namespace OfficeApp.Controllers
 
             return NotFound();
         }
+        */
 
+        /*
         // POST api/<controller>
         /// <summary>
         /// Insert new office
@@ -97,7 +101,9 @@ namespace OfficeApp.Controllers
 
             return BadRequest();
         }
+        */
 
+        /*
         // PUT api/<controller>/5
         /// <summary>
         /// Update office
@@ -133,7 +139,9 @@ namespace OfficeApp.Controllers
 
             return NotFound();
         }
+        */
 
+        /*
         // DELETE api/<controller>/5
         /// <summary>
         /// Delete office by ID
@@ -163,5 +171,6 @@ namespace OfficeApp.Controllers
 
             return NotFound();
         }
+        */
     }
 }

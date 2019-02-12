@@ -11,14 +11,15 @@ namespace OfficeApp.Controllers
 {
     [Route("api/Person")]
     [ApiController]
-    public class PersonController : ControllerBase
+    public class PersonController : BaseController<Person>
     {
-        private static OfficeContext _context;
+        //private static OfficeContext _context;
 
-        public PersonController(OfficeContext context)
+        public PersonController(OfficeContext context) : base(context)
         {
-            _context = context;
         }
+
+        /*
         // GET api/values
         /// <summary>
         /// Get all persons
@@ -40,7 +41,9 @@ namespace OfficeApp.Controllers
 
             return NotFound();
         }
+        */
 
+        /*
         // GET api/values/5
         /// <summary>
         /// Return person by ID
@@ -63,7 +66,9 @@ namespace OfficeApp.Controllers
 
             return NotFound();
         }
+        */
 
+        
         // POST api/values
         /// <summary>
         /// Insert new person
@@ -72,7 +77,7 @@ namespace OfficeApp.Controllers
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Post(PersonPostDto input)
+        public override IActionResult Post(Person input)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -113,7 +118,7 @@ namespace OfficeApp.Controllers
 
             return BadRequest();
         }
-
+        
         // PUT api/values/5
         /// <summary>
         /// Update person by Id
@@ -124,7 +129,7 @@ namespace OfficeApp.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
-        public IActionResult Put(int id, PersonUpdateDto input)
+        public override IActionResult Put(int id, Person input)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -165,6 +170,7 @@ namespace OfficeApp.Controllers
             return NotFound();
         }
 
+        /*
         // DELETE api/values/5
         /// <summary>
         /// Delete person by Id
@@ -194,6 +200,7 @@ namespace OfficeApp.Controllers
 
             return NotFound();
         }
+        */
 
         // GET api/values/5
         /// <summary>

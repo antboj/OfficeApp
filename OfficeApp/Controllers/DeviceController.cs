@@ -15,13 +15,11 @@ namespace OfficeApp.Controllers
     [Route("api/Device")]
     public class DeviceController : BaseController<Device>
     {
-        private static OfficeContext _context;
+        //private static OfficeContext _context;
 
         public DeviceController(OfficeContext context) : base(context)
         {
         }
-
-
 
         /*
         // GET api/values/5

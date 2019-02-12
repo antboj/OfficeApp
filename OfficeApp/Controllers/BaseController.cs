@@ -11,64 +11,102 @@ using OfficeApp.Models;
 namespace OfficeApp.Controllers
 {
     [Route("api/[controller]")]
-    public abstract class BaseController<T> : Controller where T : class 
+    public abstract class BaseController<T> : Controller where T : class
     {
-        private readonly DbContext _context;
-        protected DbSet<T> _dbSet;
+        protected readonly OfficeContext _context;
+        private readonly DbSet<T> _dbSet;
 
-        protected BaseController(DbContext context)
+        protected BaseController(OfficeContext context)
         {
             _context = context;
             _dbSet = context.Set<T>();
         }
 
         // GET api/values/5
-        [HttpGet("{id}")]
-        public virtual IActionResult Get(int id)
-        {
-            var found = _dbSet.Find(id);
-
-            return Ok(found);
-        }
-
-        // GET api/values/5
+        /// <summary>
+        /// Return all
+        /// </summary>
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public virtual IActionResult Get()
         {
             var all = _dbSet.Select(x => x);
 
-            return Ok(all.ToList());
+            if (all != null)
+            {
+                return Ok(all);
+            }
+
+            return NotFound();
         }
 
-        // POST api/<controller>
-        [HttpPost]
-        public virtual IActionResult Post(T input)
-        {
-            _dbSet.Add(input);
-            _context.SaveChanges();
-            return Ok();
-        }
-        /*
-        // PUT api/<controller>/5
-        [HttpPut]
-        public virtual void Put(int id, T input)
-        {
-            
-
-        }
-        */
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public virtual IActionResult Delete(int id)
+        // GET api/values/5
+        /// <summary>
+        /// Return by ID
+        /// </summary>
+        /// <param name="id"></param>
+        [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public virtual IActionResult Get(int id)
         {
             var found = _dbSet.Find(id);
 
             if (found != null)
             {
+                return Ok(found);
+            }
+
+            return NotFound();
+        }
+
+        // POST api/<controller>
+        /// <summary>
+        /// Insert new
+        /// </summary>
+        /// <param name="input"></param>
+        [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public virtual IActionResult Post(T input)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
                 try
                 {
-                    _dbSet.Remove(found);
+                    _dbSet.Add(input);
                     _context.SaveChanges();
+                    transaction.Commit();
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    return BadRequest();
+                }
+            }
+        }
+
+        // PUT api/<controller>/5
+        /// <summary>
+        /// Update 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="input"></param>
+        [HttpPut("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public virtual IActionResult Put(int id, T input)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var updated = _context.Attach(input).Entity;
+                    _context.Entry(updated).State = EntityState.Modified;
+                    _context.SaveChanges();
+                    transaction.Commit();
                     return Ok();
                 }
                 catch (Exception e)
@@ -77,7 +115,40 @@ namespace OfficeApp.Controllers
                 }
             }
 
-            return NotFound();
+        }
+
+        // DELETE api/<controller>/5
+        /// <summary>
+        /// Delete by ID
+        /// </summary>
+        /// <param name="id"></param>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public virtual IActionResult Delete(int id)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                var found = _dbSet.Find(id);
+
+                if (found != null)
+                {
+                    try
+                    {
+                        _dbSet.Remove(found);
+                        _context.SaveChanges();
+                        transaction.Commit();
+                        return Ok();
+                    }
+                    catch (Exception e)
+                    {
+                        return BadRequest();
+                    }
+                }
+
+                return NotFound();
+            }
         }
     }
 }
