@@ -50,15 +50,15 @@ namespace OfficeApp.Controllers
         /// <summary>
         /// Return usage by person
         /// </summary>
-        /// <param name="id"></param>
-        [HttpGet("{id}")]
+        /// <param name="personId"></param>
+        [HttpGet("{personId}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public IActionResult Get(int id)
+        public IActionResult Get(int personId)
         {
             var allUsages = _context.Usages;
 
-            var query = allUsages.Where(x => x.Person.Id == id).Select(s => new
+            var query = allUsages.Where(x => x.Person.Id == personId).Select(s => new
             {
                 Name = s.Person.FirstName + " " + s.Person.LastName,
                 Device = s.Device.Name,

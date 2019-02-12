@@ -11,14 +11,14 @@ namespace OfficeApp.Controllers
 {
     [Route("api/Person")]
     [ApiController]
-    public class PersonController : ControllerBase
+    public class PersonController : BaseController<Person>
     {
-        private static OfficeContext _context;
-
-        public PersonController(OfficeContext context)
+        /// <inheritdoc />
+        public PersonController(OfficeContext context) : base(context)
         {
-            _context = context;
         }
+
+        /*
         // GET api/values
         /// <summary>
         /// Get all persons
@@ -40,7 +40,9 @@ namespace OfficeApp.Controllers
 
             return NotFound();
         }
+        */
 
+        /*
         // GET api/values/5
         /// <summary>
         /// Return person by ID
@@ -63,8 +65,10 @@ namespace OfficeApp.Controllers
 
             return NotFound();
         }
-
+        */
+        
         // POST api/values
+        /// <inheritdoc />
         /// <summary>
         /// Insert new person
         /// </summary>
@@ -72,7 +76,7 @@ namespace OfficeApp.Controllers
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Post(PersonPostDto input)
+        public override IActionResult Post(Person input)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -92,20 +96,20 @@ namespace OfficeApp.Controllers
 
                         // Find last added person ofice id
                         var lastPerson = _context.Persons.Last();
-                        var LastPersonOffice = lastPerson.OfficeId;
+                        var lastPersonOffice = lastPerson.OfficeId;
                 
                         // Find office where is last added person
-                        var officeName = _context.Offices.Where(o => o.Id == LastPersonOffice).FirstOrDefault();
+                        var officeName = _context.Offices.FirstOrDefault(o => o.Id == lastPersonOffice);
 
                         // Add person into office list
-                        var lista = officeName.Persons;
-                        lista.Add(person);
+                        var personList = officeName.Persons;
+                        personList.Add(person);
                         transaction.Commit();
 
                         return Ok();
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return BadRequest();
                 }
@@ -113,8 +117,9 @@ namespace OfficeApp.Controllers
 
             return BadRequest();
         }
-
+        
         // PUT api/values/5
+        /// <inheritdoc />
         /// <summary>
         /// Update person by Id
         /// </summary>
@@ -124,7 +129,7 @@ namespace OfficeApp.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
-        public IActionResult Put(int id, PersonUpdateDto input)
+        public override IActionResult Put(int id, Person input)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -156,7 +161,7 @@ namespace OfficeApp.Controllers
                         return Ok();
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return BadRequest();
                 }
@@ -165,6 +170,7 @@ namespace OfficeApp.Controllers
             return NotFound();
         }
 
+        /*
         // DELETE api/values/5
         /// <summary>
         /// Delete person by Id
@@ -194,6 +200,7 @@ namespace OfficeApp.Controllers
 
             return NotFound();
         }
+        */
 
         // GET api/values/5
         /// <summary>

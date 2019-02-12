@@ -15,8 +15,7 @@ namespace OfficeApp.Controllers
     [Route("api/Device")]
     public class DeviceController : BaseController<Device>
     {
-        private static OfficeContext _context;
-
+        /// <inheritdoc />
         public DeviceController(OfficeContext context) : base(context)
         {
         }
@@ -156,7 +155,7 @@ namespace OfficeApp.Controllers
                         return Ok();
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return BadRequest();
                 }
@@ -193,9 +192,12 @@ namespace OfficeApp.Controllers
                         var usageRecord = _context.Usages.Where(u => u.DeviceId == deviceId && u.UsedTo == null).FirstOrDefault();
                 
                         // Stop using device
-                        usageRecord.UsedTo = DateTime.Now;
+                        if (usageRecord != null)
+                        {
+                            usageRecord.UsedTo = DateTime.Now;
 
-                        _context.SaveChanges();
+                            _context.SaveChanges();
+                        }
 
                         // Make new record for new person
                         var newUsageRecord = new Usage
@@ -212,7 +214,7 @@ namespace OfficeApp.Controllers
                         return Ok();
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return BadRequest();
                 }
