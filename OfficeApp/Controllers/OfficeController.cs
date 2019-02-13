@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OfficeApp.Dto;
@@ -12,11 +13,14 @@ using OfficeApp.Models;
 namespace OfficeApp.Controllers
 {
     [Route("api/Office")]
-    public class OfficeController : BaseController<Office>
+    public class OfficeController : BaseController<Office, OfficeDtoGet, OfficeDtoPost, OfficeDtoPut>
     {
+        private readonly IMapper _mapper;
+
         /// <inheritdoc />
-        public OfficeController(OfficeContext context) : base(context)
+        public OfficeController(OfficeContext context, IMapper mapper) : base(context, mapper)
         {
+            _mapper = mapper;
         }
 
         /*

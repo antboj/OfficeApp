@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 
 namespace OfficeApp.Dto
 {
-    public class OfficeDto
+    public class DeviceDtoPut
     {
-        public string Description { get; set; }
+        public string Name { get; set; }
+
+        public int? PersonId { get; set; }
     }
 }

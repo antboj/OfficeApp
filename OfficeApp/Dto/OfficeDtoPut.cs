@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace OfficeApp.Dto
 {
-    public class ErrorDto
+    public class OfficeDtoPut
     {
-        public string Message { get; set; }
+        public string Description { get; set; }
     }
 }

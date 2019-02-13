@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OfficeApp.Dto;
 using OfficeApp.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -11,15 +14,17 @@ using OfficeApp.Models;
 namespace OfficeApp.Controllers
 {
     [Route("api/[controller]")]
-    public abstract class BaseController<T> : Controller where T : class
+    public abstract class BaseController<Tentity, TDtoGet, TDtoPost, TDtoPut> : Controller where Tentity : class where TDtoGet : class where TDtoPost : class where TDtoPut : class
     {
         protected readonly OfficeContext _context;
-        private readonly DbSet<T> _dbSet;
+        private readonly DbSet<Tentity> _dbSet;
+        private readonly IMapper _mapper;
 
-        protected BaseController(OfficeContext context)
+        protected BaseController(OfficeContext context, IMapper mapper)
         {
             _context = context;
-            _dbSet = context.Set<T>();
+            _dbSet = context.Set<Tentity>();
+            _mapper = mapper;
         }
 
         // GET api/values/5
@@ -33,9 +38,11 @@ namespace OfficeApp.Controllers
         {
             var all = _dbSet.Select(x => x);
 
-            if (all != null)
+            var otr = _mapper.Map<IEnumerable<TDtoGet>>(all);
+
+            if (otr != null)
             {
-                return Ok(all);
+                return Ok(otr.ToList());
             }
 
             return NotFound();
@@ -53,9 +60,11 @@ namespace OfficeApp.Controllers
         {
             var found = _dbSet.Find(id);
 
-            if (found != null)
+            var otr = _mapper.Map<TDtoGet>(found);
+
+            if (otr != null)
             {
-                return Ok(found);
+                return Ok(otr);
             }
 
             return NotFound();
@@ -69,13 +78,15 @@ namespace OfficeApp.Controllers
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public virtual IActionResult Post(T input)
+        public virtual IActionResult Post(TDtoPost input)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    _dbSet.Add(input);
+                    var otr = _mapper.Map<Tentity>(input);
+
+                    _dbSet.Add(otr);
                     _context.SaveChanges();
                     transaction.Commit();
                     return Ok();
@@ -97,21 +108,21 @@ namespace OfficeApp.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
-        public virtual IActionResult Put(int id, T input)
+        public virtual IActionResult Put(int id, TDtoPut input)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    var updated = _context.Attach(input).Entity;
-                    _context.Entry(updated).State = EntityState.Modified;
+                    var found = _dbSet.Find(id);
+                    _mapper.Map<TDtoPut, Tentity>(input, found);
                     _context.SaveChanges();
                     transaction.Commit();
                     return Ok();
                 }
-                catch (Exception)
+                catch (Exception exception)
                 {
-                    return BadRequest();
+                    return BadRequest(exception.ToString());
                 }
             }
 
