@@ -9,6 +9,6 @@ namespace OfficeApp.Dto
     public class GetByOfficeDto
     {
         public string OfficeName { get; set; }
-        public List<Person> Persons { get; set; }
+        public List<PersonDtoGet> Persons { get; set; }
     }
 }

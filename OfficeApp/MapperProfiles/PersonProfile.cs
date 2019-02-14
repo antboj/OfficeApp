@@ -16,9 +16,8 @@ namespace OfficeApp.MapperProfiles
             CreateMap<PersonDtoPost, Person>();
             CreateMap<PersonDtoPut, Person>();
 
-            Mapper.Initialize(cfg => cfg.CreateMap<Person, GetByOfficeDto>()
-                .ForMember(d => d.OfficeName, s => s.MapFrom(x => x.Office.Description))
-                .ForMember(d => d.Persons.GroupBy(c => c.Office.Description), s => s.MapFrom(x => x.FirstName)));
+            CreateMap<Office, GetByOfficeDto>()
+                .ForMember(d => d.OfficeName, s => s.MapFrom(x => x.Description));
         }
     }
 }

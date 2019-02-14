@@ -36,13 +36,13 @@ namespace OfficeApp.Controllers
         [ProducesResponseType(404)]
         public virtual IActionResult Get()
         {
-            var all = _dbSet.Select(x => x);
+            var all = _dbSet.ProjectTo<TDtoGet>(_mapper.ConfigurationProvider);
 
-            var otr = _mapper.Map<IEnumerable<TDtoGet>>(all);
+            //var otr = _mapper.Map<IEnumerable<TDtoGet>>(all);
 
-            if (otr != null)
+            if (all != null)
             {
-                return Ok(otr.ToList());
+                return Ok(all.ToList());
             }
 
             return NotFound();

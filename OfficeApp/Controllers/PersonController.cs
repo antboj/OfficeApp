@@ -216,18 +216,18 @@ namespace OfficeApp.Controllers
         /// Get all persons from same office
         /// </summary>
         /// <param name="officeName"></param>
-        [HttpGet("GetByOffice{officeName}")]
+        [HttpGet("GetByOffice/{officeName}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public IActionResult GetByOffice(string officeName)
         {
-            var allPersons = _context.Persons;
+            var allOffices = _context.Offices;
 
             //var query = allPersons.Where(o => o.Office.Description == officeName).GroupBy(x => x.Office.Description)
             //    .Select(y => new {Office = y.Key, Persons = y.Select(p => p.FirstName + " " + p.LastName)});
 
-            var query = allPersons.Where(x => x.Office.Description == officeName)
-                .ProjectTo<GetByOfficeDto>();
+            var query = allOffices.Where(x => x.Description == officeName)
+                .ProjectTo<GetByOfficeDto>(_mapper.ConfigurationProvider);
 
             if (query != null)
             {
