@@ -115,6 +115,7 @@ namespace OfficeApp.Controllers
                 try
                 {
                     var found = _dbSet.Find(id);
+                    // Map from input obj to found obj
                     _mapper.Map<TDtoPut, Tentity>(input, found);
                     _context.SaveChanges();
                     transaction.Commit();

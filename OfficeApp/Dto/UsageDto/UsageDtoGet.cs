@@ -10,6 +10,6 @@ namespace OfficeApp.Dto
         public string Person { get; set; }
         public string Device { get; set; }
         public DateTime UsedFrom { get; set; }
-        public DateTime UsedTo { get; set; }
+        public DateTime? UsedTo { get; set; }
     }
 }
