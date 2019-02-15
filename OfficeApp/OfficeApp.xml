@@ -4,67 +4,53 @@
         <name>OfficeApp</name>
     </assembly>
     <members>
-        <member name="M:OfficeApp.Controllers.BaseController`1.Get">
+        <member name="M:OfficeApp.Controllers.BaseController`4.Get">
             <summary>
             Return all
             </summary>
         </member>
-        <member name="M:OfficeApp.Controllers.BaseController`1.Get(System.Int32)">
+        <member name="M:OfficeApp.Controllers.BaseController`4.Get(System.Int32)">
             <summary>
             Return by ID
             </summary>
             <param name="id"></param>
         </member>
-        <member name="M:OfficeApp.Controllers.BaseController`1.Post(`0)">
+        <member name="M:OfficeApp.Controllers.BaseController`4.Post(`2)">
             <summary>
             Insert new
             </summary>
             <param name="input"></param>
         </member>
-        <member name="M:OfficeApp.Controllers.BaseController`1.Put(System.Int32,`0)">
+        <member name="M:OfficeApp.Controllers.BaseController`4.Put(System.Int32,`3)">
             <summary>
             Update 
             </summary>
             <param name="id"></param>
             <param name="input"></param>
         </member>
-        <member name="M:OfficeApp.Controllers.BaseController`1.Delete(System.Int32)">
+        <member name="M:OfficeApp.Controllers.BaseController`4.Delete(System.Int32)">
             <summary>
             Delete by ID
             </summary>
             <param name="id"></param>
         </member>
-        <member name="M:OfficeApp.Controllers.DeviceController.#ctor(OfficeApp.Models.OfficeContext)">
+        <member name="M:OfficeApp.Controllers.DeviceController.#ctor(OfficeApp.Models.OfficeContext,AutoMapper.IMapper)">
             <inheritdoc />
         </member>
-        <member name="M:OfficeApp.Controllers.DeviceController.UseDevice(System.Int32,System.Int32)">
-            <summary>
-            Use new device by person
-            </summary>
-            <param name="personId"></param>
-            <param name="deviceId"></param>
-        </member>
-        <member name="M:OfficeApp.Controllers.DeviceController.ChangeDeviceUser(System.Int32,System.Int32)">
-            <summary>
-            Change which person use device
-            </summary>
-            <param name="personId"></param>
-            <param name="deviceId"></param>
-        </member>
-        <member name="M:OfficeApp.Controllers.OfficeController.#ctor(OfficeApp.Models.OfficeContext)">
+        <member name="M:OfficeApp.Controllers.OfficeController.#ctor(OfficeApp.Models.OfficeContext,AutoMapper.IMapper)">
             <inheritdoc />
         </member>
-        <member name="M:OfficeApp.Controllers.PersonController.#ctor(OfficeApp.Models.OfficeContext)">
+        <member name="M:OfficeApp.Controllers.PersonController.#ctor(OfficeApp.Models.OfficeContext,AutoMapper.IMapper)">
             <inheritdoc />
         </member>
-        <member name="M:OfficeApp.Controllers.PersonController.Post(OfficeApp.Models.Person)">
+        <member name="M:OfficeApp.Controllers.PersonController.Post(OfficeApp.Dto.PersonDtoPost)">
             <inheritdoc />
             <summary>
             Insert new person
             </summary>
             <param name="input"></param>
         </member>
-        <member name="M:OfficeApp.Controllers.PersonController.Put(System.Int32,OfficeApp.Models.Person)">
+        <member name="M:OfficeApp.Controllers.PersonController.Put(System.Int32,OfficeApp.Dto.PersonDtoPut)">
             <inheritdoc />
             <summary>
             Update person by Id

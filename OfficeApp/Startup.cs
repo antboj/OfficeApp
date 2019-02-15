@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,8 +31,13 @@ namespace OfficeApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Database context
             services.AddDbContext<OfficeContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:OfficeDB"]));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            // AutoMapper
+            services.AddAutoMapper();
+            services.AddMvc();
 
             // Swagger
             services.AddSwaggerGen(c =>

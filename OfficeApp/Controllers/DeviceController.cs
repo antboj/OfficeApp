@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
@@ -13,10 +14,10 @@ using OfficeApp.Models;
 namespace OfficeApp.Controllers
 {
     [Route("api/Device")]
-    public class DeviceController : BaseController<Device>
+    public class DeviceController : BaseController<Device, DeviceDtoGet, DeviceDtoPost, DeviceDtoPut>
     {
         /// <inheritdoc />
-        public DeviceController(OfficeContext context) : base(context)
+        public DeviceController(OfficeContext context, IMapper mapper) : base(context, mapper)
         {
         }
 
@@ -111,7 +112,7 @@ namespace OfficeApp.Controllers
             return BadRequest();
         }
         */
-
+        /*
         // PUT api/<controller>/5
         /// <summary>
         /// Use new device by person
@@ -222,7 +223,7 @@ namespace OfficeApp.Controllers
 
             return NotFound();
         }
-
+        */
         /*
         // PUT api/<controller>/5
         /// <summary>
@@ -292,5 +293,6 @@ namespace OfficeApp.Controllers
             return NotFound();
         }
         */
+
     }
 }

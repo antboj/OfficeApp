@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OfficeApp.Dto;
@@ -11,11 +13,14 @@ namespace OfficeApp.Controllers
 {
     [Route("api/Person")]
     [ApiController]
-    public class PersonController : BaseController<Person>
+    public class PersonController : BaseController<Person, PersonDtoGet, PersonDtoPost, PersonDtoPut>
     {
+        private readonly IMapper _mapper;
+
         /// <inheritdoc />
-        public PersonController(OfficeContext context) : base(context)
+        public PersonController(OfficeContext context, IMapper mapper) : base(context, mapper)
         {
+            _mapper = mapper;
         }
 
         /*
@@ -76,7 +81,7 @@ namespace OfficeApp.Controllers
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public override IActionResult Post(Person input)
+        public override IActionResult Post(PersonDtoPost input)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -84,12 +89,15 @@ namespace OfficeApp.Controllers
                 {
                     if (input != null)
                     {
+                        // Map PersonDto to Person obj
+                        var personInput = _mapper.Map<Person>(input);
+
                         // Add new person
                         var person = new Person
                         {
-                            FirstName = input.FirstName,
-                            LastName = input.LastName,
-                            OfficeId = input.OfficeId,
+                            FirstName = personInput.FirstName,
+                            LastName = personInput.LastName,
+                            OfficeId = personInput.OfficeId
                         };
                         _context.Persons.Add(person);
                         _context.SaveChanges();
@@ -129,7 +137,7 @@ namespace OfficeApp.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
-        public override IActionResult Put(int id, Person input)
+        public override IActionResult Put(int id, PersonDtoPut input)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -143,12 +151,14 @@ namespace OfficeApp.Controllers
 
                     if (foundPerson != null)
                     {
-                        foundPerson.FirstName = input.FirstName;
-                        foundPerson.LastName = input.LastName;
-                        if (input.OfficeId != 0)
+                        var inputPerson = _mapper.Map<Person>(input);
+
+                        foundPerson.FirstName = inputPerson.FirstName;
+                        foundPerson.LastName = inputPerson.LastName;
+                        if (inputPerson.OfficeId != 0)
                         {
                             // Change office if specified
-                            foundPerson.OfficeId = input.OfficeId;
+                            foundPerson.OfficeId = inputPerson.OfficeId;
                         }
                         else
                         {
@@ -169,7 +179,7 @@ namespace OfficeApp.Controllers
 
             return NotFound();
         }
-
+        
         /*
         // DELETE api/values/5
         /// <summary>
@@ -201,21 +211,24 @@ namespace OfficeApp.Controllers
             return NotFound();
         }
         */
-
+        
         // GET api/values/5
         /// <summary>
         /// Get all persons from same office
         /// </summary>
         /// <param name="officeName"></param>
-        [HttpGet("GetByOffice{officeName}")]
+        [HttpGet("GetByOffice/{officeName}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public IActionResult GetByOffice(string officeName)
         {
-            var allPersons = _context.Persons;
+            var allOffices = _context.Offices;
 
-            var query = allPersons.Where(o => o.Office.Description == officeName).GroupBy(x => x.Office.Description)
-                .Select(y => new {Office = y.Key, Persons = y.Select(p => p.FirstName + " " + p.LastName)});
+            //var query = allPersons.Where(o => o.Office.Description == officeName).GroupBy(x => x.Office.Description)
+            //    .Select(y => new {Office = y.Key, Persons = y.Select(p => p.FirstName + " " + p.LastName)});
+
+            var query = allOffices.Where(x => x.Description == officeName)
+                .ProjectTo<GetByOfficeDto>(_mapper.ConfigurationProvider);
 
             if (query != null)
             {
@@ -224,7 +237,6 @@ namespace OfficeApp.Controllers
 
             return NotFound();
         }
-
     }
 
 }
