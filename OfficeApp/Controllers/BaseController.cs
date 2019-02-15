@@ -14,16 +14,16 @@ using OfficeApp.Models;
 namespace OfficeApp.Controllers
 {
     [Route("api/[controller]")]
-    public abstract class BaseController<Tentity, TDtoGet, TDtoPost, TDtoPut> : Controller where Tentity : class where TDtoGet : class where TDtoPost : class where TDtoPut : class
+    public abstract class BaseController<TEntity, TDtoGet, TDtoPost, TDtoPut> : Controller where TEntity : class where TDtoGet : class where TDtoPost : class where TDtoPut : class
     {
         protected readonly OfficeContext _context;
-        private readonly DbSet<Tentity> _dbSet;
+        private readonly DbSet<TEntity> _dbSet;
         private readonly IMapper _mapper;
 
         protected BaseController(OfficeContext context, IMapper mapper)
         {
             _context = context;
-            _dbSet = context.Set<Tentity>();
+            _dbSet = context.Set<TEntity>();
             _mapper = mapper;
         }
 
@@ -84,7 +84,7 @@ namespace OfficeApp.Controllers
             {
                 try
                 {
-                    var otr = _mapper.Map<Tentity>(input);
+                    var otr = _mapper.Map<TEntity>(input);
 
                     _dbSet.Add(otr);
                     _context.SaveChanges();
@@ -116,7 +116,7 @@ namespace OfficeApp.Controllers
                 {
                     var found = _dbSet.Find(id);
                     // Map from input obj to found obj
-                    _mapper.Map<TDtoPut, Tentity>(input, found);
+                    _mapper.Map<TDtoPut, TEntity>(input, found);
                     _context.SaveChanges();
                     transaction.Commit();
                     return Ok();

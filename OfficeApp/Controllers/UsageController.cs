@@ -164,9 +164,9 @@ namespace OfficeApp.Controllers
 
             //var query = allUsages.Where(p => p.PersonId == personId && p.UsedTo != null).ProjectTo<TimeUsedByPersonDtoGet>(_mapper.ConfigurationProvider);
 
-            var query = allUsages.Where(p => p.PersonId == personId && p.UsedTo != null).GroupBy(x => x.Device.Name)
+            var query = allUsages.Where(p => p.PersonId == personId).GroupBy(x => x.Device.Name)
                 .Select(y => new TimeUsedByPersonDtoGet{Device = y.Key,
-                    TimeUsed = new TimeSpan(y.Sum(u => u.UsedTo.Value.Ticks - u.UsedFrom.Ticks)).ToString(@"dd\.hh\:mm\:ss")});
+                    TimeUsed = new TimeSpan(y.Sum(u => (u.UsedTo.Value != null ? u.UsedTo.Value.Ticks : DateTime.Now.Ticks) - u.UsedFrom.Ticks)).ToString(@"dd\.hh\:mm\:ss")});
 
             if (query.Any())
             {
