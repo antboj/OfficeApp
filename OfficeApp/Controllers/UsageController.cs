@@ -126,10 +126,13 @@ namespace OfficeApp.Controllers
             var allUsages = _context.Usages;
 
             //var query = allUsages.Where(p => p.PersonId == personId).GroupBy(d => d.Device.Name).Select(x =>
-            //     new {Device = x.Key, Usages = x.Select(y => new {UsedFrom = y.UsedFrom, UsedTo = y.UsedTo}).OrderBy(d => d.UsedFrom)});
+            //     new { Device = x.Key, Usages = x.Select(y => new { UsedFrom = y.UsedFrom, UsedTo = y.UsedTo }).OrderBy(d => d.UsedFrom) });
 
-            var query = allUsages.Where(p => p.PersonId == personId)
-                .ProjectTo<UsageAllByPersonDtoGet>(_mapper.ConfigurationProvider).OrderBy(x => x.Device);
+            //var query = allUsages.Where(p => p.PersonId == personId)
+            //    .ProjectTo<UsageAllByPersonDtoGet>(_mapper.ConfigurationProvider).OrderBy(x => x.Device);
+
+            var query = allUsages.Where(p => p.PersonId == personId).GroupBy(d => d.Device.Name)
+                .Select(x => new UsageAllByPersonDtoGet{Device = x.Key, Usages = x.Select(y => new UsageTimeDtoGet{UsedFrom = y.UsedFrom, UsedTo = y.UsedTo})});
 
             if (query.Any())
             {
@@ -152,9 +155,6 @@ namespace OfficeApp.Controllers
             var allUsages = _context.Usages;
 
             //var query = allUsages.Where(p => p.PersonId == personId && p.UsedTo != null).GroupBy(x => x.Device.Name)
-            //    .Select(y => new { Device = y.Key, TimeUsed = y.Select(o => new { Minutes = (o.UsedTo - o.UsedFrom).Value.Minutes}) });
-
-            //var query = allUsages.Where(p => p.PersonId == personId && p.UsedTo != null).GroupBy(x => x.Device.Name)
             //    .Select(y => new
             //    {
             //        Device = y.Key,
@@ -162,7 +162,11 @@ namespace OfficeApp.Controllers
             //            new TimeSpan(y.Sum(u => u.UsedTo.Value.Ticks - u.UsedFrom.Ticks)).ToString(@"dd\.hh\:mm\:ss")
             //    });
 
-            var query = allUsages.Where(p => p.PersonId == personId && p.UsedTo != null).ProjectTo<TimeUsedByPersonDtoGet>(_mapper.ConfigurationProvider);
+            //var query = allUsages.Where(p => p.PersonId == personId && p.UsedTo != null).ProjectTo<TimeUsedByPersonDtoGet>(_mapper.ConfigurationProvider);
+
+            var query = allUsages.Where(p => p.PersonId == personId && p.UsedTo != null).GroupBy(x => x.Device.Name)
+                .Select(y => new TimeUsedByPersonDtoGet{Device = y.Key,
+                    TimeUsed = new TimeSpan(y.Sum(u => u.UsedTo.Value.Ticks - u.UsedFrom.Ticks)).ToString(@"dd\.hh\:mm\:ss")});
 
             if (query.Any())
             {

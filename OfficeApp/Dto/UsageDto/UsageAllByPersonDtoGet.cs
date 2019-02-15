@@ -8,9 +8,8 @@ namespace OfficeApp.Dto
     public class UsageAllByPersonDtoGet
     {
         public string Device { get; set; }
-        public DateTime UsedFrom { get; set; }
-        public DateTime UsedTo { get; set; }
-
-        //public List<UsageTimeDtoGet> Usages { get; set;}
+        //public DateTime UsedFrom { get; set; }
+        //public DateTime UsedTo { get; set; }
+        public IEnumerable<UsageTimeDtoGet> Usages { get; set;}
     }
 }
